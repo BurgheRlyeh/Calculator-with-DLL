@@ -8,13 +8,13 @@ double Parser::parse(const std::string &expression) {
     return expr();
 }
 
-void Parser::addUnary(Unary function) {
-    unary.insert(function.getPair());
-}
-
-void Parser::addBinary(Binary function) {
-    binary.insert(function.getPair());
-}
+//void Parser::addUnary(Unary function) {
+//    unary.insert(function.getPair());
+//}
+//
+//void Parser::addBinary(Binary function) {
+//    binary.insert(function.getPair());
+//}
 
 void Parser::next() {
     if (!tokens.empty()) {

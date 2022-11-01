@@ -3,15 +3,48 @@
 #include <windows.h>
 #include <iostream>
 #include <filesystem>
-#include "src/operations/unary/Unary.h"
-#include "src/operations/binary/Binary.h"
-#include "src/operations/LoaderDLL.h"
+#include <utility>
+#include <cmath>
+#include "src/LoaderDLL.h"
+#include "src/operations/Operation.h"
+
+double add(double a, double b){
+    return (a + b);
+}
+
+double abss(double x) {
+    return std::abs(x);
+}
+
+//int main() {
+//
+////    Bebra test("add", &add, 1.5, 2.0);
+////    std::cout << "result: " << test.execute() << std::endl;
+//}
+using unary = double*(double);
+using unaryOperation = Operation<unary>*(void);
+
+using binary = double*(double, double);
+using binaryOperation = Operation<binary>;
 
 int main() {
-    auto list = LoaderDLL<Unary>::loadDLLs("./plugins/unary/");
-    for (auto bebra : list) {
-        std::cout << bebra.getPair().first << std::endl;
+//    Operation test("abss", &abss);
+//    std::cout << test.execute(-11.3) << std::endl;
+
+//    Operation test("add", &add);
+//    std::cout << test.execute(1, 2) << std::endl;
+
+    HINSTANCE hi = LoadLibrary(std::string("./plugins/abss.dll").c_str());
+    if (!hi) {
+        throw std::exception();
     }
+
+    auto farproc = GetProcAddress(hi, "function");
+    auto foo = (unaryOperation*) farproc;
+    std::cout << "a" << std::endl;
+//    std::cout << foo.getPair().first << std::endl;
+
+//    LoaderDLL<double*(double)>::f();
 }
 
 //#include <iostream>
