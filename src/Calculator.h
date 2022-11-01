@@ -8,10 +8,19 @@
 #include "parser/Parser.h"
 
 class Calculator {
+
+
 public:
+    Calculator() {
+
+    }
+
     static double calculate(const std::string& expression) {
         return (new Parser())->parse(expression);
     }
+
+private:
+
 };
 
 

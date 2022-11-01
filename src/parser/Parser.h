@@ -7,6 +7,8 @@
 #include <map>
 #include <string>
 #include <utility>
+#include "../operations/unary/Unary.h"
+#include "../operations/binary/Binary.h"
 
 class Parser {
     std::list<std::string> tokens;  // list of tokens
@@ -20,6 +22,9 @@ public:
     ~Parser() = default;
 
     double parse(const std::string& expression);
+
+    void addUnary(Unary function);
+    void addBinary(Binary function);
 
 private:
     void next();        // update current token

@@ -5,10 +5,15 @@ double Parser::parse(const std::string &expression) {
     tokens = Lexer::lexer(expression);
     current = tokens.front();
 
-    unary.insert(std::make_pair("sqr", [](double n) -> double { return n * n; }));
-    binary.insert(std::make_pair("pow", [](double n, double p) -> double { return pow(n, p); }));
-
     return expr();
+}
+
+void Parser::addUnary(Unary function) {
+    unary.insert(function.getPair());
+}
+
+void Parser::addBinary(Binary function) {
+    binary.insert(function.getPair());
 }
 
 void Parser::next() {
