@@ -1,93 +1,36 @@
 #include <list>
-#include <string>
-#include <windows.h>
-#include <iostream>
-#include <filesystem>
-#include <utility>
-#include <cmath>
-#include <map>
-#include "src/LoaderDLL.h"
-#include "src/operations/Operation.h"
-
-double add(double a, double b){
-    return (a + b);
-}
-double Abs(double x) {
-    return std::abs(x);
-}
+#include <cassert>
+#include "src/Calculator.h"
 
 int main() {
-//    Operation test("abs", &Abs);
-//    std::cout << test.execute(-13) << std::endl;
-//    std::cout << test(-13) << std::endl;
+    auto* calc = new Calculator();
 
-    HINSTANCE hi = LoadLibrary(std::string("./plugins/libAbs.dll").c_str());
-    if (!hi) {
-        throw std::exception();
-    }
+    assert(calc->calculate("(4+5+9)*2-(10/2)+55-6") == 80);
+    assert(calc->calculate("pow(cos(1),2)+pow(sin(1),2)") == 1);
+    assert(calc->calculate("log(pow(e(),sqrt(4)))") == 2);
+    assert(calc->calculate("2*log(pow(e(),4)) + log(pow(e(),5)) -log(pow(e(),3))") == 10);
+    assert(calc->calculate("2*sin(pi())*cos(pi()) - sin(2 * pi())") == 0);
 
-    auto farproc = GetProcAddress(hi, "function");
-//    FreeLibrary(hi);
+    bool exceptionThrown;
 
-    auto foo = (Operation<double (*)(double)>*) farproc;
-    std::cout << "a" << std::endl;
-    std::cout << foo->getName() << std::endl;
-    std::cout << (*foo)(-15) << std::endl;
-    auto pair = (foo->getPair());
-    std::cout << pair.first << std::endl;
-    std::cout << (*pair.second)(-15) << std::endl;
+    exceptionThrown = false;
+    try { calc->calculate("1 / ()"); }
+    catch(...) { exceptionThrown = true; }
+    assert(exceptionThrown);
 
-//    auto list = LoaderDLL<double(*)(double)>::loadDLLs("./plugins/");
-//    for (auto o : list) {
-//        std::cout << o->getName() << std::endl;
-//        std::cout << (*o)(5) << std::endl;
-//        std::cout << std::endl;
-//    }
+    exceptionThrown = false;
+    try { calc->calculate("sin(1))"); }
+    catch(...) { exceptionThrown = true; }
+    assert(exceptionThrown);
 
+    exceptionThrown = false;
+    try { calc->calculate("unknown(60)"); }
+    catch(...) { exceptionThrown = true; }
+    assert(exceptionThrown);
 
-//    LoaderDLL<double*(double)>::f();
+    exceptionThrown = false;
+    try { calc->calculate("фжлдфва"); }
+    catch(...) { exceptionThrown = true; }
+    assert(exceptionThrown);
+
 }
-
-//#include <iostream>
-//#include <string>
-//#include "src/Calculator.h"
-
-
-//int main() {
-//    std::string expression;
-//
-//    expression = "+";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-
-//    expression = "-14.7/3*-2 + 0.2 - sqr(3) - 1 + sqr(sqr(2)) - 16";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "3+2*2";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "3/2";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "3+5 / 2";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "(1 + 22) * 3";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "1 + 1";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-//
-//    expression = "100000000/1/2/3/4/5/6/7/8/9/10";
-//    std::cout << expression << " -> "
-//              << Calculator::calculate(expression) << std::endl;
-
-//    return 0;
-//}
-

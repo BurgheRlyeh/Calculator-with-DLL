@@ -1,8 +1,11 @@
+#include <iostream>
 #include "Lexer.h"
 
 std::list<std::string> Lexer::lexer(const std::string &expr) {
     std::string token;
     std::list<std::string> tokens;
+
+    int bracketNum{};
 
     for (auto c : expr) {
         // skip space
@@ -10,8 +13,14 @@ std::list<std::string> Lexer::lexer(const std::string &expr) {
             continue;
         }
 
-        // collect number and function name
-        if (isdigit(c) || c == '.' || std::isalpha(c)) {
+        // collect number
+        if (isdigit(c) || c == '.') {
+            token += c;
+            continue;
+        }
+
+        // collect function name
+        if (std::isalpha(c)) {
             token += c;
             continue;
         }
@@ -22,13 +31,16 @@ std::list<std::string> Lexer::lexer(const std::string &expr) {
             token.clear();
         }
 
-        // skip repeated simple operations
-        if (tokens.back() == std::string(1, c) && (c == '+' || c == '*' || c == '/')) {
-            token.clear();
-            continue;
-        }
-
         // simple operations
+        if (c == '(') {
+            ++bracketNum;
+        }
+        else if (c == ')') {
+            --bracketNum;
+            if (bracketNum < 0) {
+                throw std::exception();
+            }
+        }
         tokens.emplace_back(1, c);
     }
 

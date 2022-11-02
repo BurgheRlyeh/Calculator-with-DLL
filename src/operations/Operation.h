@@ -17,10 +17,6 @@ public:
         return name;
     }
 
-    std::pair<std::string, Operation<Function>*> getPair() {
-        return std::make_pair(name, this);
-    }
-
     template <typename... Args>
     double operator()(Args&&... args) {
         return std::bind(function, std::forward<Args>(args)...)();
