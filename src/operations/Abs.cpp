@@ -4,4 +4,4 @@ double Abs(double x) {
     return std::abs(x);
 }
 
-Operation function("abs", &Abs);
+Operation function("name",  &Abs);

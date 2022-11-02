@@ -5,44 +5,45 @@
 #include <filesystem>
 #include <utility>
 #include <cmath>
+#include <map>
 #include "src/LoaderDLL.h"
 #include "src/operations/Operation.h"
 
 double add(double a, double b){
     return (a + b);
 }
-
-double abss(double x) {
+double Abs(double x) {
     return std::abs(x);
 }
 
-//int main() {
-//
-////    Bebra test("add", &add, 1.5, 2.0);
-////    std::cout << "result: " << test.execute() << std::endl;
-//}
-using unary = double*(double);
-using unaryOperation = Operation<unary>*(void);
-
-using binary = double*(double, double);
-using binaryOperation = Operation<binary>;
-
 int main() {
-//    Operation test("abss", &abss);
-//    std::cout << test.execute(-11.3) << std::endl;
+//    Operation test("abs", &Abs);
+//    std::cout << test.execute(-13) << std::endl;
+//    std::cout << test(-13) << std::endl;
 
-//    Operation test("add", &add);
-//    std::cout << test.execute(1, 2) << std::endl;
-
-    HINSTANCE hi = LoadLibrary(std::string("./plugins/abss.dll").c_str());
+    HINSTANCE hi = LoadLibrary(std::string("./plugins/libAbs.dll").c_str());
     if (!hi) {
         throw std::exception();
     }
 
     auto farproc = GetProcAddress(hi, "function");
-    auto foo = (unaryOperation*) farproc;
+//    FreeLibrary(hi);
+
+    auto foo = (Operation<double (*)(double)>*) farproc;
     std::cout << "a" << std::endl;
-//    std::cout << foo.getPair().first << std::endl;
+    std::cout << foo->getName() << std::endl;
+    std::cout << (*foo)(-15) << std::endl;
+    auto pair = (foo->getPair());
+    std::cout << pair.first << std::endl;
+    std::cout << (*pair.second)(-15) << std::endl;
+
+//    auto list = LoaderDLL<double(*)(double)>::loadDLLs("./plugins/");
+//    for (auto o : list) {
+//        std::cout << o->getName() << std::endl;
+//        std::cout << (*o)(5) << std::endl;
+//        std::cout << std::endl;
+//    }
+
 
 //    LoaderDLL<double*(double)>::f();
 }

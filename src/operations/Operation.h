@@ -3,6 +3,7 @@
 
 #include <string>
 #include <functional>
+#include <utility>
 
 template <typename Function>
 class Operation {
@@ -10,15 +11,19 @@ class Operation {
     Function function;
 
 public:
-    Operation(std::string  name, Function function) : name(std::move(name)), function(function) {}
+    Operation(std::string name, Function function) : name(std::move(name)), function(function) {}
 
-    template <typename... Args>
-    double execute(Args&&... args) {
-        return std::bind(function, std::forward<Args>(args)...)();
+    std::string getName() {
+        return name;
     }
 
-    std::pair<std::string, Function> getPair() {
-        return std::make_pair(name, function);
+    std::pair<std::string, Operation<Function>*> getPair() {
+        return std::make_pair(name, this);
+    }
+
+    template <typename... Args>
+    double operator()(Args&&... args) {
+        return std::bind(function, std::forward<Args>(args)...)();
     }
 };
 
